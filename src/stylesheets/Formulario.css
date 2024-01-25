@@ -1,38 +1,54 @@
 .contenedor-Formulario {
-    width: 1170px;
-    height: 368px;
-    margin: 10px 10px 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; 
-    box-shadow: 0 3px 13px 1px rgb(0 0 0 / 9%);
-  }
+  width: 1170px;
+  height: 368px;
+  margin: 10px 10px 50px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  box-shadow: 0 3px 13px 1px rgb(0 0 0 / 9%);
+}
 
-  .imagen-Formulario {
-    height: 100%;
-    width: 50%;
-  }
+.imagen-Formulario {
+  height: 100%;
+  width: 50%;
+}
 
-  .contenedor-texto-Formulario {
-    text-align: center;
-    padding: 40px;
-    font-family: Lato, sans-serif;
-    font-weight: 400;
-    line-height: 1.5rem;
-  }
-  
-  .nombre-Formulario {
-    font-size: 1.3rem;
-  }
-  
-  .cargo-Formulario {
-    font-size: 1.3rem;
-    margin-top: 15px;
-    padding-bottom: 30px;
-  }
-  
-  .texto-Formulario {
-    font-size: 1.1rem;
-    text-align: justify;
-  }
+.contenedor-texto-Formulario {
+  text-align: center;
+  padding: 40px;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  line-height: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nombre-Formulario {
+  font-size: 1.3rem;
+}
+
+.cargo-Formulario {
+  font-size: 1.3rem;
+  margin-top: 15px;
+  padding-bottom: 30px;
+}
+
+.texto-Formulario {
+  font-size: 1.1rem;
+  text-align: justify;
+}
+
+input {
+  width:50%;
+  height: 40px;
+  margin-bottom: 20px;
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+  padding-left: 20px;
+  font-size: 1rem;
+  text-align:center;
+}
