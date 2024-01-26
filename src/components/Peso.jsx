@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Peso({ sistemaMetrico }) {
-  const [peso, setPeso] = useState('');
-
+function Peso({ sistemaMetrico, peso, onPesoChange }) {
   const handlePesoChange = (event) => {
-    setPeso(event.target.value);
+    const nuevoPeso = event.target.value;
+    onPesoChange(nuevoPeso);
   };
 
   return (
@@ -16,9 +15,13 @@ function Peso({ sistemaMetrico }) {
         value={peso}
         onChange={handlePesoChange}
       />
-      <label htmlFor="unidadPeso">
-        {sistemaMetrico === 'metrico' ? 'Kg' : 'Lb'}
-      </label>
+
+      
+        <label>
+          {sistemaMetrico === 'metrico' ? 'Kg' : 'Lb'}
+        </label>
+     
+      
     </div>
   );
 }

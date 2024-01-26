@@ -13,6 +13,8 @@ function Formulario() {
     const [sistemaMetrico, setSistemaMetrico] = useState("metrico");
     const [altura, setAltura] = useState("");
     const [peso, setPeso] = useState("");
+    const [resultado, setResultado] = useState(null);
+
 
     // Manejador de cambios en el menú edad
     const handleEdadChange = (event) => {
@@ -26,24 +28,25 @@ function Formulario() {
 
     const handleAlturaChange = (nuevaAltura) => {
         setAltura(nuevaAltura);
-      };
+    };
 
-      const handlePesoChange = (nuevoPeso) => {
+    const handlePesoChange = (nuevoPeso) => {
         setPeso(nuevoPeso);
-      };
+    };
 
     const handleCalcularClick = () => {
-        // Convertir la altura y peso a números y realizar la operación de suma
         const alturaNumero = parseFloat(altura);
         const pesoNumero = parseFloat(peso);
-    
+
         if (!isNaN(alturaNumero) && !isNaN(pesoNumero)) {
-          const resultado = alturaNumero + pesoNumero;
-          console.log('Resultado de la suma:', resultado);
+            const resultadoCalculo = alturaNumero + pesoNumero;
+            setResultado(resultadoCalculo);
         } else {
-          console.error('Por favor, ingrese valores numéricos válidos para altura y peso.');
+            console.error('Por favor, ingrese valores numéricos válidos para altura y peso.');
         }
-      };
+        console.log('¡Clic realizado!');
+        console.log('Altura:', alturaNumero);
+    };
 
     return (
         <div className="contenedor-Formulario">
@@ -61,12 +64,28 @@ function Formulario() {
                     {/*sección para el sistema métrico */}
                     <SistemaMetrico onSistemaMetricoChange={handleSistemaMetricoChange} />
 
-                    {/* Integrar los componentes Altura y Peso */}
+                    {/* Integrar el componente Altura y pasar la función de manejo como prop */}
+
                     <Altura sistemaMetrico={sistemaMetrico} onAlturaChange={handleAlturaChange} />
+                    <label>Altura ingresada: {altura} </label>
+
+
+
+                    {/* Integrar el componente Peso y pasar la función de manejo como prop */}
                     <Peso sistemaMetrico={sistemaMetrico} onPesoChange={handlePesoChange} />
+                    <label>Peso ingresado: {peso} </label>
 
                     {/* Integrar el componente BotonCalcular */}
-                    <BotonCalcular onCalcularClick={handleCalcularClick} />
+                    <button onClick={handleCalcularClick}>Calcular</button>
+                    {/* <BotonCalcular onCalcularClick={handleCalcularClick} /> */}
+                    <label htmlFor=""> { } </label>
+
+                    {resultado !== null && (
+                        <div>
+                            <label>Resultado del cálculo:</label>
+                            <label>{resultado}</label>
+                        </div>
+                    )}
                 </form>
             </div>
         </div>

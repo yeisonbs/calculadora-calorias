@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 
-function Altura({ sistemaMetrico }) {
-  const [altura, setAltura] = useState('');
+function Altura({ sistemaMetrico, onAlturaChange }) {
 
+  const [alturaIngresada, setAlturaIngresada] = useState('');
+  
   const handleAlturaChange = (event) => {
-    setAltura(event.target.value);
+    const nuevaAltura = event.target.value;
+    onAlturaChange(nuevaAltura);
+    setAlturaIngresada(nuevaAltura);
+    
   };
 
   return (
@@ -13,12 +18,15 @@ function Altura({ sistemaMetrico }) {
       <input
         type="text"
         id="altura"
-        value={altura}
+        value={alturaIngresada}
         onChange={handleAlturaChange}
       />
-      <label htmlFor="unidadAltura">
+      
+      <label >
         {sistemaMetrico === 'metrico' ? 'cm' : 'pulg'}
       </label>
+      
+      
     </div>
   );
 }
