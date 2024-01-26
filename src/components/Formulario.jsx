@@ -5,6 +5,7 @@ import Edad from "./Edad";
 import SistemaMetrico from "./SistemaMetrico";
 import Altura from "./Altura";
 import Peso from "./Peso";
+import Resultado from "./Resultado";
 import BotonCalcular from "./BotonCalcular";
 
 function Formulario() {
@@ -34,18 +35,30 @@ function Formulario() {
         setPeso(nuevoPeso);
     };
 
-    const handleCalcularClick = () => {
+    const handleCalcularClick = (event) => {
+        event.preventDefault();
         const alturaNumero = parseFloat(altura);
         const pesoNumero = parseFloat(peso);
 
-        if (!isNaN(alturaNumero) && !isNaN(pesoNumero)) {
-            const resultadoCalculo = alturaNumero + pesoNumero;
+        if (Number.isFinite(alturaNumero) && Number.isFinite(pesoNumero) && alturaNumero >= 0 && pesoNumero >= 0) {
+            let resultadoCalculo;
+
+            if (sistemaMetrico === 'metrico') {
+                // Sumar altura y peso
+                resultadoCalculo = alturaNumero + pesoNumero;
+            } else {
+                // Restar altura y peso
+                resultadoCalculo = alturaNumero - pesoNumero;
+                console.log('Resultado resta:', resultadoCalculo);
+            }
             setResultado(resultadoCalculo);
+            //onResultadoChange(resultadoCalculo); // Pasar el resultado al componente padre (App.js)
         } else {
             console.error('Por favor, ingrese valores numéricos válidos para altura y peso.');
         }
+
         console.log('¡Clic realizado!');
-        console.log('Altura:', alturaNumero);
+        
     };
 
     return (
@@ -77,15 +90,11 @@ function Formulario() {
 
                     {/* Integrar el componente BotonCalcular */}
                     <button onClick={handleCalcularClick}>Calcular</button>
+
                     {/* <BotonCalcular onCalcularClick={handleCalcularClick} /> */}
                     <label htmlFor=""> { } </label>
 
-                    {resultado !== null && (
-                        <div>
-                            <label>Resultado del cálculo:</label>
-                            <label>{resultado}</label>
-                        </div>
-                    )}
+                    {resultado !== null && <Resultado resultado={resultado} />}
                 </form>
             </div>
         </div>

@@ -1,4 +1,3 @@
-// Resultado.js
 import React from 'react';
 
 function Resultado({ resultado }) {
