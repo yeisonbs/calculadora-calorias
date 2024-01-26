@@ -1,13 +1,13 @@
 import "./App.css";
 import { useState } from "react";
 import Formulario from "./components/Formulario";
-import Resultado from "./components/Resultado";
+//import Resultado from "./components/Resultado";
+
 
 
 function App() {
 
   const [resultadoTotal, setResultadoTotal] = useState(null);
-
   const handleResultadoChange = (nuevoResultado) => {
     setResultadoTotal(nuevoResultado);
   };
@@ -16,7 +16,7 @@ function App() {
     <div className="App">
       <h1>Calculadora de Calorias</h1>
       <Formulario onResultadoChange={handleResultadoChange} />
-      {resultadoTotal !== null && <p>Resultado Total en App.js: {resultadoTotal}</p>}
+      {resultadoTotal !== null &&  {resultadoTotal}}
 
     </div>
   );

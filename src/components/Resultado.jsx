@@ -3,8 +3,8 @@ import React from 'react';
 function Resultado({ resultado }) {
   return (
     <div>
-      <label>Resultado del cálculo:</label>
-      <label>{resultado}</label>
+      <label>Consumir al dia: </label>
+      <label>{resultado} Calorias</label>
     </div>
   );
 }

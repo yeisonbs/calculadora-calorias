@@ -6,7 +6,9 @@ import SistemaMetrico from "./SistemaMetrico";
 import Altura from "./Altura";
 import Peso from "./Peso";
 import Resultado from "./Resultado";
-import BotonCalcular from "./BotonCalcular";
+//import BotonCalcular from "./BotonCalcular";
+import LabelMensajeError from "./Label-mensaje-error";
+import CalculadoraCalorias from "../Logica-negocio/CalculadoraCalorias";
 
 function Formulario() {
     // Estado para almacenar la edad seleccionada
@@ -15,7 +17,9 @@ function Formulario() {
     const [altura, setAltura] = useState("");
     const [peso, setPeso] = useState("");
     const [resultado, setResultado] = useState(null);
-
+    const [mensajeError, setMensajeError] = useState("");
+    //const [alturaCm, setAlturaCm] = useState(0);
+    //const [pesoLibras, setPesoLibras] = useState(0);
 
     // Manejador de cambios en el menú edad
     const handleEdadChange = (event) => {
@@ -39,26 +43,44 @@ function Formulario() {
         event.preventDefault();
         const alturaNumero = parseFloat(altura);
         const pesoNumero = parseFloat(peso);
+        const calculadora = new CalculadoraCalorias();
 
-        if (Number.isFinite(alturaNumero) && Number.isFinite(pesoNumero) && alturaNumero >= 0 && pesoNumero >= 0) {
-            let resultadoCalculo;
-
-            if (sistemaMetrico === 'metrico') {
+        if (
+            Number.isFinite(alturaNumero) &&
+            Number.isFinite(pesoNumero) &&
+            alturaNumero >= 0 &&
+            pesoNumero >= 0
+        ) {
+            //let resultadoCalculo;
+            let calorias;
+            if (sistemaMetrico === "metrico") {
                 // Sumar altura y peso
-                resultadoCalculo = alturaNumero + pesoNumero;
+                //resultadoCalculo = alturaNumero + pesoNumero;
+                const alturaPulgadas = calculadora.convertirCmAPulgadas(alturaNumero);
+                const pesoLibras = calculadora.convertirKgALibras(pesoNumero);
+                calorias = calculadora.calcularCalorias(pesoLibras,alturaPulgadas,parseInt(edad, 10));
+                console.log("pulg "+alturaPulgadas);
+                console.log("libara"+pesoLibras);
+               
             } else {
-                // Restar altura y peso
-                resultadoCalculo = alturaNumero - pesoNumero;
-                console.log('Resultado resta:', resultadoCalculo);
+                calorias = calculadora.calcularCalorias(pesoNumero, alturaNumero, parseInt(edad, 10));
+                //console.log((resultadoCalculo = alturaNumero - pesoNumero));
+                console.log(edad);
+                console.log("las calorias son"+ calorias);
             }
-            setResultado(resultadoCalculo);
-            //onResultadoChange(resultadoCalculo); // Pasar el resultado al componente padre (App.js)
+
+            if (calorias >= 0) {
+                setResultado(calorias);
+                setMensajeError("");
+            } else {
+                setMensajeError("corregir los datos ingresados");
+                //onResultadoChange(resultadoCalculo); // Pasar el resultado al componente padre (App.js)
+            }
         } else {
-            console.error('Por favor, ingrese valores numéricos válidos para altura y peso.');
+            setMensajeError("Por favor, corrija los errores antes de calcular.");
         }
 
-        console.log('¡Clic realizado!');
-        
+        console.log("¡Clic realizado!");
     };
 
     return (
@@ -79,14 +101,18 @@ function Formulario() {
 
                     {/* Integrar el componente Altura y pasar la función de manejo como prop */}
 
-                    <Altura sistemaMetrico={sistemaMetrico} onAlturaChange={handleAlturaChange} />
-                    <label>Altura ingresada: {altura} </label>
-
-
+                    <Altura
+                        sistemaMetrico={sistemaMetrico}
+                        onAlturaChange={handleAlturaChange}
+                    />
+                    {mensajeError && <LabelMensajeError mensaje={mensajeError} />}
 
                     {/* Integrar el componente Peso y pasar la función de manejo como prop */}
-                    <Peso sistemaMetrico={sistemaMetrico} onPesoChange={handlePesoChange} />
-                    <label>Peso ingresado: {peso} </label>
+                    <Peso
+                        sistemaMetrico={sistemaMetrico}
+                        onPesoChange={handlePesoChange}
+                    />
+                    {mensajeError && <LabelMensajeError mensaje={mensajeError} />}
 
                     {/* Integrar el componente BotonCalcular */}
                     <button onClick={handleCalcularClick}>Calcular</button>
