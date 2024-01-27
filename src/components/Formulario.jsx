@@ -1,12 +1,13 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../stylesheets/Formulario.css";
 import Edad from "./Edad";
 import SistemaMetrico from "./SistemaMetrico";
 import Altura from "./Altura";
 import Peso from "./Peso";
 import Resultado from "./Resultado";
-//import BotonCalcular from "./BotonCalcular";
+import { useMemo } from "react";
+
 import LabelMensajeError from "./Label-mensaje-error";
 import CalculadoraCalorias from "../Logica-negocio/CalculadoraCalorias";
 
@@ -18,8 +19,6 @@ function Formulario() {
     const [peso, setPeso] = useState("");
     const [resultado, setResultado] = useState(null);
     const [mensajeError, setMensajeError] = useState("");
-    //const [alturaCm, setAlturaCm] = useState(0);
-    //const [pesoLibras, setPesoLibras] = useState(0);
 
     // Manejador de cambios en el menú edad
     const handleEdadChange = (event) => {
@@ -28,7 +27,14 @@ function Formulario() {
 
     //manejador de cambios en el menú sistema métrico
     const handleSistemaMetricoChange = (nuevoSistemaMetrico) => {
+        // Reiniciar los valores de peso y altura si se cambia el sistema métrico
+        if (nuevoSistemaMetrico !== sistemaMetrico) {
+            setAltura("");
+            setPeso("");
+        }
+
         setSistemaMetrico(nuevoSistemaMetrico);
+        setMensajeError(""); // Limpiar el mensaje de error en caso de éxito
     };
 
     const handleAlturaChange = (nuevaAltura) => {
@@ -39,49 +45,37 @@ function Formulario() {
         setPeso(nuevoPeso);
     };
 
-    const handleCalcularClick = (event) => {
-        event.preventDefault();
+    // const calculadora = new CalculadoraCalorias();
+    const calculadora = useMemo(() => new CalculadoraCalorias(), []); // Asegúrate de importar useMemo
+
+
+    useEffect(() => {
+        //event.preventDefault();
         const alturaNumero = parseFloat(altura);
         const pesoNumero = parseFloat(peso);
-        const calculadora = new CalculadoraCalorias();
+        console.log(pesoNumero);
+        console.log("peso formulario : " + typeof peso);
 
-        if (
-            Number.isFinite(alturaNumero) &&
-            Number.isFinite(pesoNumero) &&
-            alturaNumero >= 0 &&
-            pesoNumero >= 0
-        ) {
-            //let resultadoCalculo;
-            let calorias;
-            if (sistemaMetrico === "metrico") {
-                // Sumar altura y peso
-                //resultadoCalculo = alturaNumero + pesoNumero;
-                const alturaPulgadas = calculadora.convertirCmAPulgadas(alturaNumero);
-                const pesoLibras = calculadora.convertirKgALibras(pesoNumero);
-                calorias = calculadora.calcularCalorias(pesoLibras,alturaPulgadas,parseInt(edad, 10));
-                console.log("pulg "+alturaPulgadas);
-                console.log("libara"+pesoLibras);
-               
-            } else {
-                calorias = calculadora.calcularCalorias(pesoNumero, alturaNumero, parseInt(edad, 10));
-                //console.log((resultadoCalculo = alturaNumero - pesoNumero));
-                console.log(edad);
-                console.log("las calorias son"+ calorias);
-            }
-
-            if (calorias >= 0) {
-                setResultado(calorias);
-                setMensajeError("");
-            } else {
-                setMensajeError("corregir los datos ingresados");
-                //onResultadoChange(resultadoCalculo); // Pasar el resultado al componente padre (App.js)
-            }
+        let calorias;
+        if (sistemaMetrico === "metrico") {
+            const alturaPulgadas = calculadora.convertirCmAPulgadas(alturaNumero);
+            const pesoLibras = calculadora.convertirKgALibras(pesoNumero);
+            calorias = calculadora.calcularCalorias(pesoLibras, alturaPulgadas, parseInt(edad, 10));
         } else {
-            setMensajeError("Por favor, corrija los errores antes de calcular.");
+            calorias = calculadora.calcularCalorias(pesoNumero, alturaNumero, parseInt(edad, 10));
         }
 
-        console.log("¡Clic realizado!");
-    };
+        if (calorias >= 0) {
+            setResultado(calorias);
+            setMensajeError("");
+        } else {
+            setMensajeError("");
+        }
+
+
+    }, [altura, peso, edad, sistemaMetrico, calculadora]);
+
+
 
     return (
         <div className="contenedor-Formulario">
@@ -100,27 +94,16 @@ function Formulario() {
                     <SistemaMetrico onSistemaMetricoChange={handleSistemaMetricoChange} />
 
                     {/* Integrar el componente Altura y pasar la función de manejo como prop */}
-
-                    <Altura
-                        sistemaMetrico={sistemaMetrico}
-                        onAlturaChange={handleAlturaChange}
-                    />
+                    <Altura sistemaMetrico={sistemaMetrico} onAlturaChange={handleAlturaChange} />
                     {mensajeError && <LabelMensajeError mensaje={mensajeError} />}
 
                     {/* Integrar el componente Peso y pasar la función de manejo como prop */}
-                    <Peso
-                        sistemaMetrico={sistemaMetrico}
-                        onPesoChange={handlePesoChange}
-                    />
+                    <Peso sistemaMetrico={sistemaMetrico} onPesoChange={handlePesoChange} />
                     {mensajeError && <LabelMensajeError mensaje={mensajeError} />}
 
-                    {/* Integrar el componente BotonCalcular */}
-                    <button onClick={handleCalcularClick}>Calcular</button>
 
-                    {/* <BotonCalcular onCalcularClick={handleCalcularClick} /> */}
-                    <label htmlFor=""> { } </label>
+                    {mensajeError ? <Resultado mensaje={""} /> : resultado !== null && <Resultado resultado={resultado.toFixed(2)} />}
 
-                    {resultado !== null && <Resultado resultado={resultado} />}
                 </form>
             </div>
         </div>
